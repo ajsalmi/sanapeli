@@ -17,7 +17,7 @@ public class Sanapeli {
                 String[] rivi = lukija.nextLine().split(" ");
                 for (String sana : rivi) {
                     if (sana.matches(".*"+VALIMERKIT)){
-                        // otetaan völimerkki pois lupusta ja tallennetaan sekin sanaksi
+                        // otetaan välimerkki pois lopusta ja tallennetaan sekin sanaksi
                         sanalista.add(sana.substring(0, sana.length()-1));
                         sanalista.add(sana.substring(sana.length()-1, sana.length()));
                     } else {
@@ -31,24 +31,35 @@ public class Sanapeli {
         }
         
         //testaamista varten
-        String rivi = "";
-        for (String sana : sanalista) {
-            
-            if (!sana.matches(VALIMERKIT)){
-                sana=" " + sana;
-            }
-            
-            System.out.print(sana);
-        }
+//        String rivi = "";
+//        for (String sana : sanalista) {
+//            
+//            if (!sana.matches(VALIMERKIT)){
+//                sana=" " + sana;
+//            }
+//            
+//            System.out.print(sana);
+//        }
         
+        // -- aloitusvalikko tähän
+        
+        // loopin sisään ?
+        // ohjeet
+        // uusi peli --> päälooppiin
+        // jatka --> (ei käytössä) 
+        // lopeta --> System.exit() ????
+        
+        // -- aloitusvalikko tähän
+
+
         // päälooppi
         Scanner lukija = new Scanner(System.in);
         boolean jatkuu = true;   
         Random random = new Random();
-        int i = 0;
-        String sana = "...";
+        int i;
+        String sana;
         while (jatkuu) {            
-            //arvo indeksi
+            // -- tehtävä tähän --
             do {                
                 i = random.nextInt(sanalista.size());
                 sana = sanalista.get(i);                
@@ -59,13 +70,17 @@ public class Sanapeli {
             jatkuu = "k".equals(lukija.nextLine());
             
             
+            // -- tehtävä loppuu tähän --
             
+            // -- pistetaulu tähän --
             
+            // lopeta --> break;
+            // jatka --> ei mitään
+            // muu syöte --> ?
+            
+            // -- pistetaulu loppuu
         }
-        
-        
-            
-            
+    
     }
     
 }
