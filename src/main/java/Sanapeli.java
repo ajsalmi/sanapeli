@@ -31,77 +31,81 @@ public class Sanapeli {
                     System.out.println("Virhe: " + e.getMessage());
         }
         
+        System.out.println("Tervetuloa pelaamaan Kalevala-sanapeliä!");
         
-        // -- aloitusvalikko tähän
-        
-        // loopin sisään ?
-        // ohjeet
-        // uusi peli --> päälooppiin
-        // jatka --> (ei käytössä) 
-        // lopeta --> System.exit() ????
-        
-        // -- aloitusvalikko tähän
-
-
-        // päälooppi
         Scanner lukija = new Scanner(System.in);
-        Random random = new Random();
-        boolean jatkuu = true;   
+        Ohjeet ohjeet = new Ohjeet();
         
-        int i;
-        String sana;
-        while (jatkuu) {            
-            // -- tehtävä tähän --
-            do {                
-                i = random.nextInt(sanalista.size());
-                sana = sanalista.get(i);                
-            } while (sanalista.get(i).matches(VALIMERKIT+"|\n"));
-            
-            int sanojaYmparilta = 20;
-            List <String> vasenYmparisto;
-            List <String> oikeaYmparisto;
-            
-            vasenYmparisto =  sanalista.subList(Math.max(i-sanojaYmparilta,0), i);
-            oikeaYmparisto =  sanalista.subList(i+1, Math.min(i+sanojaYmparilta+1,sanalista.size()));
-            
-            String[] vaihtoehdot = luoVaihtoehdot(sanalista, sana);
-            
-            System.out.print(" ...");
-            System.out.print(listastaTekstiksi(vasenYmparisto));
-            System.out.print(" _____");
-            System.out.print(listastaTekstiksi(oikeaYmparisto));
+        // -- aloitusvalikko tähän
+        while (true) {
+        System.out.println("\nOhjeet [o]\nUusi peli [p]\nLopeta [l]");
+        String vastaus = lukija.nextLine();
+        if (!(vastaus.matches("o|p|l"))) {
+            System.out.println("\nVirheellinen syöte!");
+            continue;
+        }
+        if (vastaus.equals("o")) {
+            ohjeet.tulostaOhjeet();
+            continue;
+        }
+        if (vastaus.equals("l")) {
+            System.exit(0);
+        }
+        if (vastaus.equals("p")) {
+        // päälooppi
 
-            // tulosta vaihtoehdot
-            System.out.println(" ...\n");
-            System.out.println("A)"+vaihtoehdot[0]);
-            System.out.println("B)"+vaihtoehdot[1]);
-            System.out.println("C)"+vaihtoehdot[2]);
-            System.out.println("D)"+vaihtoehdot[3]);
+            Random random = new Random();
+            boolean jatkuu = true;   
+            int pisteet = 0;
+            int i;
+            String sana;
+            while (jatkuu) {            
+                // -- tehtävä tähän --
+                do {                
+                    i = random.nextInt(sanalista.size());
+                    sana = sanalista.get(i);                
+                } while (sanalista.get(i).matches(VALIMERKIT+"|\n"));
+
+                int sanojaYmparilta = 20;
+                List <String> vasenYmparisto;
+                List <String> oikeaYmparisto;
+
+                vasenYmparisto =  sanalista.subList(Math.max(i-sanojaYmparilta,0), i);
+                oikeaYmparisto =  sanalista.subList(i+1, Math.min(i+sanojaYmparilta+1,sanalista.size()));
+
+                String[] vaihtoehdot = luoVaihtoehdot(sanalista, sana);
+
+                System.out.print(" ...");
+                System.out.print(listastaTekstiksi(vasenYmparisto));
+                System.out.print(" _____");
+                System.out.print(listastaTekstiksi(oikeaYmparisto));
+
+                // tulosta vaihtoehdot
+                System.out.println(" ...\n");
+                System.out.println("A)"+vaihtoehdot[0]);
+                System.out.println("B)"+vaihtoehdot[1]);
+                System.out.println("C)"+vaihtoehdot[2]);
+                System.out.println("D)"+vaihtoehdot[3]);
 
 
-            while(true){
-                System.out.println("Arvaa! (A, B, C, D)");
-                String vastaus = lukija.nextLine();
-                if (vastaus.equals("A")){
-                    System.out.println("Oikein!");
-                    break;
-                } else if (vastaus.matches("A|B|C|D")){
-                    System.out.println("Yritä uudestaan!");
+                while(true){
+                    System.out.println("Arvaa! (A, B, C, D)");
+                    vastaus = lukija.nextLine();
+                    if (vastaus.equals("A")){
+                        System.out.println("Oikein!");
+                        pisteet++;
+                        break;
+                    } else if (vastaus.matches("A|B|C|D")){
+                        System.out.println("Yritä uudestaan!");
+                    }
                 }
-            }
-
-            System.out.println("\nHaluatko jatkaa: (k/e)");
-            jatkuu = "k".equals(lukija.nextLine());
+                //pistetaulu
+                System.out.println("\nOlet saanut " + pisteet + " vastausta oikein!");
+                System.out.println("\nHaluatko jatkaa: (k/e)");
+                jatkuu = "k".equals(lukija.nextLine());
             
-            // -- tehtävä loppuu tähän --
-            
-            // -- pistetaulu tähän --
-            
-            // lopeta --> break;
-            // jatka --> ei mitään
-            // muu syöte --> ?
-            
-            // -- pistetaulu loppuu
+            }                
+        }
         }
     }
     
