@@ -1,143 +1,125 @@
+
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.File;
 import java.util.List;
 import java.util.Random;
 
-
 public class Sanapeli {
-    private static final String VALIMERKIT= "(\\.|\\,|\\;|\\:|\\!|\\?)";
-    
+
+    private static final String VALIMERKIT = "(\\.|\\,|\\;|\\:|\\!|\\?)";
+    private static final KayttoLiittyma kayttis = new TekstiKayttis();
+
     public static void main(String[] args) {
-        
+
         //luetaan tiedosto ja jaetaan se sanoiksi, jotka tallennetaan listalle
         ArrayList<String> sanalista = new ArrayList<>();
-        
-        try(Scanner lukija = new Scanner(new File("Kalevala.txt"),"UTF-8")) {
+
+        try (Scanner lukija = new Scanner(new File("Kalevala.txt"), "UTF-8")) {
             while (lukija.hasNextLine()) {
                 String[] rivi = lukija.nextLine().split(" ");
                 for (String sana : rivi) {
-                    if (sana.matches(".*"+VALIMERKIT)){
+                    if (sana.matches(".*" + VALIMERKIT)) {
                         // otetaan välimerkki pois lopusta ja tallennetaan sekin sanaksi
-                        sanalista.add(sana.substring(0, sana.length()-1));
-                        sanalista.add(sana.substring(sana.length()-1, sana.length()));
+                        sanalista.add(sana.substring(0, sana.length() - 1));
+                        sanalista.add(sana.substring(sana.length() - 1, sana.length()));
                     } else {
-                    sanalista.add(sana);
+                        sanalista.add(sana);
                     }
                 }
                 sanalista.add("\n");
-            }    
+            }
         } catch (Exception e) {
-                    System.out.println("Virhe: " + e.getMessage());
+            kayttis.naytaTeksti("Virhe: " + e.getMessage());
         }
-        
-        System.out.println("Tervetuloa pelaamaan Kalevala-sanapeliä!");
-        
-        Scanner lukija = new Scanner(System.in);
-        Ohjeet ohjeet = new Ohjeet();
-        
+
+        kayttis.naytaTeksti("Tervetuloa pelaamaan Kalevala-sanapeliä!");
+
+        Ohjeet ohjeet = new Ohjeet(); // miten ratkaistaan? kayttis.tulosta(ohjeet) vai muuten? 
+
         // -- aloitusvalikko tähän
         while (true) {
-        System.out.println("\nOhjeet [o]\nUusi peli [p]\nLopeta [l]");
-        String vastaus = lukija.nextLine();
-        if (!(vastaus.matches("o|p|l"))) {
-            System.out.println("\nVirheellinen syöte!");
-            continue;
-        }
-        if (vastaus.equals("o")) {
-            ohjeet.tulostaOhjeet();
-            continue;
-        }
-        if (vastaus.equals("l")) {
-            System.exit(0);
-        }
-        if (vastaus.equals("p")) {
-        // päälooppi
+            String vastaus = kayttis.kysyKayttajalta("\nOhjeet [o]\nUusi peli [p]\nLopeta [l]", "o|p|l");
 
-            Random random = new Random();
-            boolean jatkuu = true;   
-            int pisteet = 0;
-            int i;
-            String sana;
-            while (jatkuu) {            
-                // -- tehtävä tähän --
-                do {                
-                    i = random.nextInt(sanalista.size());
-                    sana = sanalista.get(i);                
-                } while (sanalista.get(i).matches(VALIMERKIT+"|\n"));
+            if (vastaus.equals("o")) {
+                ohjeet.tulostaOhjeet(); // pitäisikö olla oma valikko 
+                continue;               // josta voi vain [p]alata?
+            }
+            if (vastaus.equals("l")) {
+                System.exit(0);
+            }
+            if (vastaus.equals("p")) {
+                // päälooppi
 
-                int sanojaYmparilta = 20;
-                List <String> vasenYmparisto;
-                List <String> oikeaYmparisto;
+                Random random = new Random();
+                boolean jatkuu = true;
+                int pisteet = 0;
+                int i;
+                String sana;
+                while (jatkuu) {
 
-                vasenYmparisto =  sanalista.subList(Math.max(i-sanojaYmparilta,0), i);
-                oikeaYmparisto =  sanalista.subList(i+1, Math.min(i+sanojaYmparilta+1,sanalista.size()));
+                    do {
+                        i = random.nextInt(sanalista.size());
+                        sana = sanalista.get(i);
+                    } while (sanalista.get(i).matches(VALIMERKIT + "|\n"));
 
-                String[] vaihtoehdot = luoVaihtoehdot(sanalista, sana);
+                    int sanojaYmparilta = 20;
+                    List<String> vasenYmparisto;
+                    List<String> oikeaYmparisto;
 
-                System.out.print(" ...");
-                System.out.print(listastaTekstiksi(vasenYmparisto));
-                System.out.print(" _____");
-                System.out.print(listastaTekstiksi(oikeaYmparisto));
+                    vasenYmparisto = sanalista.subList(Math.max(i - sanojaYmparilta, 0), i);
+                    oikeaYmparisto = sanalista.subList(i + 1, Math.min(i + sanojaYmparilta + 1, sanalista.size()));
 
-                // tulosta vaihtoehdot
-                System.out.println(" ...\n");
-                System.out.println("A)"+vaihtoehdot[0]);
-                System.out.println("B)"+vaihtoehdot[1]);
-                System.out.println("C)"+vaihtoehdot[2]);
-                System.out.println("D)"+vaihtoehdot[3]);
+                    kayttis.naytaTeksti(
+                            " ..." + listastaTekstiksi(vasenYmparisto)
+                            + " _____"
+                            + listastaTekstiksi(oikeaYmparisto)
+                            + " ...\n");
 
+                    String[] vaihtoehdot = luoVaihtoehdot(sanalista, sana);
+                    kayttis.kyseleMonivalinta(vastaus, vaihtoehdot, 0);
+                    pisteet++;
 
-                while(true){
-                    System.out.println("Arvaa! (A, B, C, D)");
-                    vastaus = lukija.nextLine();
-                    if (vastaus.equals("A")){
-                        System.out.println("Oikein!");
-                        pisteet++;
-                        break;
-                    } else if (vastaus.matches("A|B|C|D")){
-                        System.out.println("Yritä uudestaan!");
-                    }
+                    //pistetaulu
+                    vastaus = kayttis.kysyKayttajalta(
+                            "\nOlet saanut " + pisteet + " vastausta oikein!"
+                            + "\nHaluatko jatkaa: (k/e)", "k|e");
+
+                    jatkuu = "k".equals(vastaus);
                 }
-                //pistetaulu
-                System.out.println("\nOlet saanut " + pisteet + " vastausta oikein!");
-                System.out.println("\nHaluatko jatkaa: (k/e)");
-                jatkuu = "k".equals(lukija.nextLine());
-            
-            }                
-        }
+            }
         }
     }
-    
-    public static String listastaTekstiksi (List<String> lista){
-                //testaamista varten
+
+    public static String listastaTekstiksi(List<String> lista) {
+        //testaamista varten
         String teksti = "";
         for (String sana : lista) {
-            
-            if (!sana.matches(VALIMERKIT)){
-                sana=" " + sana;
+
+            if (!sana.matches(VALIMERKIT)) {
+                sana = " " + sana;
             }
-            
+
             teksti += sana;
-            }
+        }
 
         return teksti;
     }
-    
-    public static String[] luoVaihtoehdot (List<String> sanalista, String oikeaVastaus){
+
+    public static String[] luoVaihtoehdot(List<String> sanalista, String oikeaVastaus) {
         String[] vaihtoehdot = new String[4];
         Random r = new Random();
         vaihtoehdot[0] = oikeaVastaus;
-        int i; 
+        int i;
         String sana;
-        
+
         for (int j = 1; j < vaihtoehdot.length; j++) {
-            do {                
+            do {
                 i = r.nextInt(sanalista.size());
-                sana = sanalista.get(i);                
-            } while (sanalista.get(i).matches(VALIMERKIT+"|\n"));
-                
-                vaihtoehdot[j] = sanalista.get(i);                
+                sana = sanalista.get(i);
+            } while (sanalista.get(i).matches(VALIMERKIT + "|\n"));
+
+            vaihtoehdot[j] = sanalista.get(i);
         }
         // shuffle puuttuu --> aina A-vastaus
         return vaihtoehdot;
