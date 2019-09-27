@@ -34,7 +34,7 @@ public class TekstiKayttis implements KayttoLiittyma {
     public boolean kyseleMonivalinta(String kysymys, String[] vaihtoehdot, int oikeaVastaus) {
         String aakkoset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; // mahdollisuus tehdä isompia monivalintakysymyksiä
 //        int i = abcd.indexOf(vastaus);
-
+        System.out.println(kysymys);
         for (int i = 0; i < vaihtoehdot.length; i++) {
             System.out.println(aakkoset.charAt(i)+")"+vaihtoehdot[i]);
         }
