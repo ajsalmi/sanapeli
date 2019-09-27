@@ -51,7 +51,7 @@ public class Tekstinkasittelija {
         }
         return teksti;
     }
-    
+        
     public String[] luoVaihtoehdot(List<String> sanalista, String oikeaVastaus) {
         String[] vaihtoehdot = new String[4];
         Random r = new Random();

@@ -7,6 +7,8 @@ import java.util.Random;
 public class Sanapeli {
 
     private static final String VALIMERKIT = "(\\.|\\,|\\;|\\:|\\!|\\?)";
+    private static final int YMPARISTON_KOKO = 20;
+    
     private static final KayttoLiittyma kayttis = new TekstiKayttis();
     private static final Tekstinkasittelija kasittelija = new Tekstinkasittelija();
 
@@ -50,12 +52,8 @@ public class Sanapeli {
                         sana = sanalista.get(i);
                     } while (sanalista.get(i).matches(VALIMERKIT + "|\n"));
 
-                    int sanojaYmparilta = 20;
-                    List<String> vasenYmparisto;
-                    List<String> oikeaYmparisto;
-
-                    vasenYmparisto = sanalista.subList(Math.max(i - sanojaYmparilta, 0), i);
-                    oikeaYmparisto = sanalista.subList(i + 1, Math.min(i + sanojaYmparilta + 1, sanalista.size()));
+                    List<String> vasenYmparisto = sanalista.subList(Math.max(i - YMPARISTON_KOKO, 0), i);
+                    List<String> oikeaYmparisto = sanalista.subList(i + 1, Math.min(i + YMPARISTON_KOKO + 1, sanalista.size()));
 
                     String kysymys = 
                             " ..." + kasittelija.listastaTekstiksi(vasenYmparisto)
